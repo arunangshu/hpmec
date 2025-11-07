@@ -1,0 +1,23 @@
+# High-Performance Molecular Energy Calculator
+# Requirements for Streamlit deployment
+
+# Core dependencies
+streamlit>=1.28.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Scientific computing
+scipy>=1.11.0
+
+# Cheminformatics (for future integration with other modules)
+# rdkit>=2023.3.1  # Uncomment when integrating with Module 2
+# xyz2mol  # Uncomment when integrating with Module 2
+
+# Force field parsing
+pyyaml>=6.0
+
+# Multiprocessing (built-in, but listed for documentation)
+# multiprocessing is part of Python standard library
+
+# Optional: for better performance
+# numba>=0.57.0  # JIT compilation for numerical functions
