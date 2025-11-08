@@ -105,7 +105,7 @@ Developed a side-by-side performance comparison system demonstrating the effecti
 
 Integrated all components into a cohesive application and deployed it for public access:
 
-- **Module Integration**: Connected the energy calculator backend (calculator.py) with the Streamlit frontend (app.py), ensuring smooth data flow between file loading, force field application, and energy calculation
+- **Module Integration**: Connected the energy calculator backend [calculator.py](https://github.com/arunangshu/hpmec/blob/main/calculator.py) with the Streamlit frontend [app.py](https://github.com/arunangshu/hpmec/blob/main/app.py), ensuring smooth data flow between file loading, force field application, and energy calculation
 - **Error Propagation**: Implemented proper exception handling throughout the pipeline so that errors in any component (file parsing, SMARTS matching, energy calculation) are caught and displayed to users with helpful messages
 - **Documentation Creation**: Wrote comprehensive documentation including [README.md](https://github.com/arunangshu/hpmec/blob/main/README.md) for quick start and [DOCUMENTATION.md](https://github.com/arunangshu/hpmec/blob/main/DOCUMENTATION.md) covering complete mathematical theory, implementation details, and performance analysis
 - **[GitHub Repository](https://github.com/arunangshu/hpmec/)**: Organized the code into a clean repository structure with proper version control
