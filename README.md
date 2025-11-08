@@ -102,6 +102,8 @@ hpmec/
 ├── app.py                 # Main Streamlit GUI application
 ├── calculator.py          # Placeholder calculator module
 ├── requirements.txt       # Python dependencies
+├── ethanol.yaml          # Sample OPLS-AA force field for ethanol
+├── ethanol_sample.xyz    # Sample ethanol molecular geometry
 ├── idea.md               # Project blueprint and documentation
 ├── .streamlit/
 │   └── config.toml       # Streamlit configuration
@@ -110,11 +112,20 @@ hpmec/
 
 ## 🔧 Usage
 
+### Testing with Sample Files
+The repository includes sample files for testing:
+- **ethanol_sample.xyz**: Sample ethanol molecular geometry
+- **ethanol.yaml**: OPLS-AA force field parameters for ethanol
+
+Simply upload these files in the web interface to test the application!
+
 ### Single Molecule Calculation
-1. Upload a `.xyz` molecular geometry file
-2. Upload a `.yaml` force field parameter file
-3. Select "Single Molecule" mode
-4. Click "Calculate Energy"
+1. Upload a `.xyz` molecular geometry file (or use `ethanol_sample.xyz`)
+2. Upload a `.yaml` force field parameter file (or use `ethanol.yaml`)
+3. View the interactive 3D molecule visualization
+4. Download uploaded files if needed
+5. Select "Single Molecule" mode
+6. Click "Calculate Energy"
 
 ### Batch Processing (HPC-2)
 1. Upload input files
@@ -127,6 +138,9 @@ hpmec/
 
 ### GUI Features
 - ✅ File upload for `.xyz` and `.yaml` files
+- ✅ **3D Interactive Molecule Visualization** with py3Dmol
+- ✅ **Download buttons** for uploaded files
+- ✅ Multiple visualization styles (Ball & Stick, Space Filling, Stick Only)
 - ✅ Single and batch processing modes
 - ✅ Real-time progress tracking
 - ✅ Detailed energy breakdown
@@ -141,10 +155,12 @@ hpmec/
 
 ## 🧪 Example Files
 
-Create a sample ethanol `.xyz` file:
+Sample files are included in the repository:
+
+**ethanol_sample.xyz** - Ethanol molecular geometry:
 ```
 9
-Ethanol molecule
+Ethanol molecule - Sample test file
 C    0.000   0.000   0.000
 C    1.520   0.000   0.000
 O    2.020   1.350   0.000
@@ -156,6 +172,8 @@ H    1.920  -0.500  -0.890
 H    2.800   1.350   0.000
 ```
 
+**ethanol.yaml** - OPLS-AA force field parameters (included in repo)
+
 ## 📦 Dependencies
 
 Core requirements:
@@ -164,6 +182,7 @@ Core requirements:
 - `numpy` - Numerical computing
 - `scipy` - Scientific computing (cKDTree)
 - `pyyaml` - YAML parsing
+- `py3Dmol` - 3D molecule visualization
 
 Future integration (Modules 1-3):
 - `rdkit` - Cheminformatics

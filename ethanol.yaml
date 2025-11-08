@@ -1,0 +1,74 @@
+# --- ethanol.yaml ---
+# A complete OPLS-AA-like dummy force field for C2H5OH (Ethanol)
+# for testing the HPC project.
+# UNITS: kJ/mol, nm, radians, elementary charge (e)
+# -----------------------------------------------------------------
+
+# Atom typing rules. Processed in order. Most specific first.
+# SMARTS define the chemical environment.
+# Parameters from OPLS-AA force field
+atom_types:
+  - smarts: '[H][OX2H1]([CX4H2])'  # H on an alcohol: HO (opls_155)
+    type_name: 'opls_155'
+    charge: 0.418
+    sigma: 0.0       
+    epsilon: 0.0   
+
+  - smarts: '[OX2H1]([H])[CX4H2]'   # O in an alcohol: OH (opls_154)
+    type_name: 'opls_154'
+    charge: -0.683
+    sigma: 0.312
+    epsilon: 0.71132
+
+  - smarts: '[CX4H2]([OX2H1])[CH3X4]' # C in CH2-OH: CT (opls_157)
+    type_name: 'opls_157'
+    charge: 0.145
+    sigma: 0.350
+    epsilon: 0.276144
+
+  - smarts: '[CH3X4]([CX4H2])'       # C in CH3: CT (opls_157)
+    type_name: 'opls_157'
+    charge: -0.180
+    sigma: 0.350
+    epsilon: 0.276144
+
+  - smarts: '[H][CX4H2]([OX2H1])'   # H on CH2 group: HC (opls_156)
+    type_name: 'opls_156'
+    charge: 0.060
+    sigma: 0.250
+    epsilon: 0.12552
+
+  - smarts: '[H][CH3X4]'           # H on CH3 group: HC (opls_156)
+    type_name: 'opls_156'
+    charge: 0.060
+    sigma: 0.250
+    epsilon: 0.12552
+
+# Bond parameters
+# Format: 'TYPE1-TYPE2': [k_b (kJ/mol/nm^2), b0 (nm)]
+bond_types:
+  'opls_157-opls_157': [224262.4, 0.1529]  # CT-CT
+  'opls_157-opls_154': [267776.0, 0.1410]  # CT-OH
+  'opls_154-opls_155': [462750.4, 0.0945]  # OH-HO
+  'opls_157-opls_156': [284512.0, 0.1090]  # CT-HC
+
+# Angle parameters
+# Format: 'TYPE1-CENTER-TYPE3': [k_theta (kJ/mol/rad^2), theta0 (radians)]
+# 109.5 deg = 1.911 rad; 107.5 deg = 1.876 rad; 108.5 deg = 1.894 rad
+angle_types:
+  'opls_157-opls_157-opls_154': [418.4, 1.911]  # CT-CT-OH
+  'opls_156-opls_157-opls_157': [292.8, 1.911]  # HC-CT-CT
+  'opls_156-opls_157-opls_154': [292.8, 1.911]  # HC-CT-OH
+  'opls_156-opls_157-opls_156': [276.1, 1.876]  # HC-CT-HC
+  'opls_157-opls_154-opls_155': [334.7, 1.894]  # CT-OH-HO
+
+# Dihedral parameters
+# OPLS Fourier series (function type 3)
+# Format: 'T1-T2-T3-T4': [V1, V2, V3, V4] (all in kJ/mol)
+dihedral_types:
+  'opls_156-opls_157-opls_157-opls_154': [0.97905, 2.93716, 0.0, -3.91622] # HC-CT-CT-OH
+  'opls_156-opls_157-opls_157-opls_156': [0.62760, 1.88280, 0.0, -2.51040] # HC-CT-CT-HC
+  'opls_157-opls_157-opls_154-opls_155': [-0.44350, 3.83255, 0.72801, -4.11705] # CT-CT-OH-HO
+  'opls_156-opls_157-opls_154-opls_155': [0.94140, 2.82420, 0.0, -3.76560] # HC-CT-OH-HO
+
+# --- End of ethanol.yaml ---

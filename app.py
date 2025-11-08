@@ -4,11 +4,14 @@ Member 4: GUI & Parallelization Module
 """
 
 import streamlit as st
+import streamlit.components.v1 as components
 import os
 import time
 import multiprocessing as mp
 from functools import partial
 import pandas as pd
+import py3Dmol
+import yaml
 
 # Page configuration
 st.set_page_config(
@@ -39,6 +42,11 @@ st.markdown("""
         padding: 1rem;
         border-radius: 0.5rem;
         margin: 0.5rem 0;
+    }
+    /* Ensure code blocks have scrollbars and limited height */
+    .stCodeBlock {
+        max-height: 300px;
+        overflow-y: auto;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -85,10 +93,19 @@ with tab1:
         
         if uploaded_xyz:
             st.success(f"✅ Loaded: {uploaded_xyz.name}")
-            with st.expander("View file preview"):
+            
+            # Download button for XYZ file
+            st.download_button(
+                label="⬇️ Download XYZ file",
+                data=uploaded_xyz.getvalue(),
+                file_name=uploaded_xyz.name,
+                mime="chemical/x-xyz"
+            )
+            
+            with st.expander("View file preview (full content)"):
                 content = uploaded_xyz.getvalue().decode('utf-8')
-                lines = content.split('\n')[:10]
-                st.code('\n'.join(lines), language='text')
+                # Display all lines with a scrollable container
+                st.code(content, language='text', line_numbers=True)
     
     with col2:
         st.subheader("⚙️ Upload Force Field")
@@ -100,10 +117,103 @@ with tab1:
         
         if uploaded_yaml:
             st.success(f"✅ Loaded: {uploaded_yaml.name}")
-            with st.expander("View file preview"):
-                content = uploaded_yaml.getvalue().decode('utf-8')
-                lines = content.split('\n')[:15]
-                st.code('\n'.join(lines), language='yaml')
+            
+            # Download button for YAML file
+            st.download_button(
+                label="⬇️ Download YAML file",
+                data=uploaded_yaml.getvalue(),
+                file_name=uploaded_yaml.name,
+                mime="application/x-yaml"
+            )
+            
+            # Parse YAML content
+            yaml_content = uploaded_yaml.getvalue().decode('utf-8')
+            
+            # Formatted YAML preview
+            with st.expander("📋 View formatted force field parameters"):
+                try:
+                    yaml_data = yaml.safe_load(yaml_content)
+                    
+                    # Display atom types
+                    if 'atom_types' in yaml_data:
+                        st.markdown("**🔹 Atom Types:**")
+                        atom_types_df = pd.DataFrame(yaml_data['atom_types'])
+                        st.dataframe(atom_types_df, use_container_width=True, height=200)
+                    
+                    # Display bond types
+                    if 'bond_types' in yaml_data:
+                        st.markdown("**🔹 Bond Parameters:**")
+                        bond_data = [
+                            {"Bond Type": k, "k_b (kJ/mol/nm²)": v[0], "b₀ (nm)": v[1]}
+                            for k, v in yaml_data['bond_types'].items()
+                        ]
+                        st.dataframe(pd.DataFrame(bond_data), use_container_width=True, height=150)
+                    
+                    # Display angle types
+                    if 'angle_types' in yaml_data:
+                        st.markdown("**🔹 Angle Parameters:**")
+                        angle_data = [
+                            {"Angle Type": k, "k_θ (kJ/mol/rad²)": v[0], "θ₀ (rad)": v[1]}
+                            for k, v in yaml_data['angle_types'].items()
+                        ]
+                        st.dataframe(pd.DataFrame(angle_data), use_container_width=True, height=150)
+                    
+                    # Display dihedral types
+                    if 'dihedral_types' in yaml_data:
+                        st.markdown("**🔹 Dihedral Parameters:**")
+                        dihedral_data = [
+                            {"Dihedral Type": k, "V₁": v[0], "V₂": v[1], "V₃": v[2], "V₄": v[3]}
+                            for k, v in yaml_data['dihedral_types'].items()
+                        ]
+                        st.dataframe(pd.DataFrame(dihedral_data), use_container_width=True, height=150)
+                        
+                except Exception as e:
+                    st.error(f"Error parsing YAML: {str(e)}")
+            
+            # Raw YAML preview
+            with st.expander("📄 View raw YAML content"):
+                st.code(yaml_content, language='yaml', line_numbers=True)
+    
+    # 3D Molecule Visualization
+    if uploaded_xyz is not None:
+        st.divider()
+        st.subheader("🔬 3D Molecular Structure Visualization")
+        
+        # Add viewing style selector
+        view_style = st.selectbox(
+            "Select visualization style:",
+            ["Ball & Stick", "Space Filling", "Stick Only"],
+            index=0
+        )
+        
+        try:
+            # Parse XYZ file content
+            xyz_content = uploaded_xyz.getvalue().decode('utf-8')
+            
+            # Create 3D viewer with py3Dmol
+            viewer = py3Dmol.view(width=800, height=500)
+            viewer.addModel(xyz_content, 'xyz')
+            
+            # Apply selected style
+            if view_style == "Ball & Stick":
+                viewer.setStyle({'stick': {}, 'sphere': {'scale': 0.3}})
+            elif view_style == "Space Filling":
+                viewer.setStyle({'sphere': {}})
+            else:  # Stick Only
+                viewer.setStyle({'stick': {}})
+            
+            viewer.setBackgroundColor('white')
+            viewer.zoomTo()
+            
+            # Render the viewer as HTML and display in Streamlit
+            viewer_html = viewer._make_html()
+            components.html(viewer_html, height=500, scrolling=False)
+            
+            st.caption("🖱️ Use mouse to rotate, zoom, and pan the molecule")
+                    
+        except Exception as e:
+            st.error(f"Error visualizing molecule: {str(e)}")
+            st.info("💡 Make sure your XYZ file is in the correct format.")
     
     st.divider()
     
