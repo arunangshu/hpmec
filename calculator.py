@@ -28,7 +28,6 @@ import itertools
 import multiprocessing as mp
 import time
 from functools import partial
-import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 from rdkit import Chem
 from rdkit.Chem import AllChem
