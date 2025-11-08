@@ -1,6 +1,6 @@
 # Project Report: Molecular Energy Calculator
 
-**Course**: High Performance Computing  
+**Course**: High Performance Computing and its Applications in Complex Systems
 **Project**: Molecular Energy Calculator using Force Fields  
 **Student Name**: Arunangshu Karmakar  
 **Roll Number**: 23MA10014  
@@ -33,7 +33,6 @@ Designed and implemented the complete graphical user interface using Streamlit, 
 - **Three Main Tabs**: Organized the application into "Calculate Energy", "YAML Builder", and "Documentation" tabs for clear workflow separation
 - **File Upload System**: Integrated drag-and-drop file upload supporting XYZ, PDB, and MOL formats with automatic format detection
 - **Responsive Layout**: Created a clean layout with sidebar controls for cutoff distance, optimization options, and visualization settings
-- **Session State Management**: Implemented Streamlit session state to preserve user inputs and molecule data across interactions, preventing data loss during re-runs
 - **Error Handling**: Added comprehensive error messages and user feedback for invalid files, missing parameters, and calculation errors
 - **Real-time Updates**: The interface updates dynamically as users modify parameters, providing instant visual and numerical feedback
 
@@ -44,9 +43,6 @@ Integrated interactive 3D visualization capabilities using the py3Dmol library (
 - **Interactive 3D Rendering**: Users can rotate, zoom, and pan the molecule using mouse controls for detailed structural examination
 - **Multiple Visualization Styles**: Implemented stick, sphere, and ball-and-stick rendering modes to suit different visualization preferences
 - **CPK Color Scheme**: Applied standard Corey-Pauling-Koltun coloring where carbon is gray, oxygen is red, nitrogen is blue, and hydrogen is white for intuitive element recognition
-- **Coverage-based Coloring**: Created a unique coloring scheme that highlights atoms in green when successfully typed by SMARTS patterns and red when untyped, providing instant visual feedback on force field completeness
-- **Coordinate System Conversion**: Implemented proper unit conversion between Ångströms (used in visualization and most file formats) and nanometers (used in energy calculations)
-- **Auto-zoom Functionality**: The viewer automatically adjusts the camera to frame the entire molecule optimally
 
 ### C. Multi-Format File Support
 
@@ -83,7 +79,6 @@ $$E_{\text{total}} = E_{\text{bonds}} + E_{\text{angles}} + E_{\text{dihedrals}}
 - **SMARTS Pattern Generation**: The builder uses RDKit to automatically generate SMARTS (SMiles ARbitrary Target Specification) patterns that describe each atom's chemical environment, including element type, connectivity, and neighboring atoms
 - **Atom Type Grouping**: Chemically equivalent atoms (like the three hydrogens in a methyl group) are automatically grouped into a single atom type to reduce redundancy
 - **Type Name Consistency**: Bond, angle, and dihedral type names are auto-generated from atom type names to ensure perfect consistency throughout the force field
-- **OPLS-AA Defaults**: Provides reasonable default parameters based on the OPLS All-Atom force field as starting values
 - **Real-time YAML Preview**: Users can see the generated YAML file in real-time and export it for use in calculations
 
 ### E. YAML Verification System
@@ -93,20 +88,18 @@ Implemented a comprehensive validation system that checks force field completene
 - **Coverage Analysis**: Calculates four coverage percentages - atom coverage (percentage of atoms successfully typed by SMARTS patterns), bond coverage (percentage of bonds with defined parameters), angle coverage, and dihedral coverage
 - **SMARTS Pattern Matching**: Validates that all SMARTS patterns correctly match their intended atoms by attempting to match each pattern against the RDKit molecule representation
 - **Missing Parameter Detection**: Identifies and reports specific missing parameters (e.g., "C_type_1-O_type_3 bond missing") to guide users in completing the force field
-- **Visual Coverage Display**: Shows a 3D visualization with color-coded atoms (green for typed, red for untyped) allowing users to immediately see which parts of the molecule lack parameters
-- **Detailed Reports**: Generates comprehensive validation reports showing coverage percentages, lists of successfully typed atoms, and warnings for missing parameters
 
 ### F. Performance Comparison Framework
 
 Developed a side-by-side performance comparison system demonstrating the effectiveness of HPC optimizations:
 
-- **Naive O(N²) Implementation**: Implemented the straightforward double-loop approach that checks all atom pairs for non-bonded interactions, serving as the baseline for performance comparison
-- **Spatial Tree Optimization**: Integrated scipy.spatial.cKDTree (k-dimensional tree) for efficient neighbor searching, reducing complexity from O(N²) to O(N log N) by only checking atom pairs within the cutoff distance
+- **Naive O(N²) Implementation**: Straightforward double-loop approach that checks all atom pairs for non-bonded interactions, serving as the baseline for performance comparison
+- **Spatial Tree Optimization**: Tree-based scipy.spatial.cKDTree (k-dimensional tree) for efficient neighbor searching, reducing complexity from O(N²) to O(N log N) by only checking atom pairs within the cutoff distance
 - **Multi-core Parallelization**: Implemented Python multiprocessing to distribute pair calculations across available CPU cores, providing additional speedup beyond the algorithmic improvement
 - **Real-time Timing**: Both methods are timed during execution, and the speedup factor is calculated and displayed to demonstrate the performance improvement
 - **Accuracy Verification**: The system verifies that optimized methods produce identical energy values to the naive approach (within numerical precision), ensuring correctness
 
-**Performance Results**: For a system with 10,000 atoms, the optimized approach achieves approximately 269× speedup compared to the naive method, and with multi-core parallelization on 4 cores, the total speedup reaches over 900×.
+**Performance Results**: For a system with 4,500 atoms, the optimized approach achieves approximately 15× speedup compared to the naive method, and with multi-core parallelization on 4 cores, the total speedup can reach over 30×.
 
 ### G. System Integration and Deployment
 
@@ -117,21 +110,6 @@ Integrated all components into a cohesive application and deployed it for public
 - **Documentation Creation**: Wrote comprehensive documentation including [README.md](https://github.com/arunangshu/hpmec/blob/main/README.md) for quick start and [DOCUMENTATION.md](https://github.com/arunangshu/hpmec/blob/main/DOCUMENTATION.md) covering complete mathematical theory, implementation details, and performance analysis
 - **[GitHub Repository](https://github.com/arunangshu/hpmec/)**: Organized the code into a clean repository structure with proper version control
 - **Streamlit Cloud Deployment**: Successfully deployed the application to Streamlit Cloud at [https://hpc-mol.streamlit.app](https://hpc-mol.streamlit.app), making it accessible to anyone with a web browser without requiring local installation
-- **Dependency Management**: Created requirements.txt with all necessary packages (Streamlit, RDKit, NumPy, SciPy, py3Dmol) for easy installation
-
----
-
-## 2. Technical Summary
-
-The molecular energy calculator successfully implements all five classical force field energy terms:
-
-1. Bond stretching (harmonic potential)
-2. Angle bending (harmonic potential)
-3. Dihedral torsion (OPLS Fourier series)
-4. Lennard-Jones (van der Waals, 12-6 potential)
-5. Coulombic (electrostatic interactions)
-
-The system demonstrates significant performance improvements through HPC optimization techniques, achieving speedups of up to >1,000× for large molecular systems (100,000 atoms) by combining spatial tree data structures with multi-core parallelization.
 
 ---
 
