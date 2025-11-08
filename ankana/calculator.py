@@ -349,7 +349,10 @@ def assign_parameters(molecule, ff_parameters):
 
         matches = rdkit_mol.GetSubstructMatches(patt, useChirality=False)
         for match in matches:
-            for rd_idx in match:
+            # For multi-atom SMARTS patterns, only type the FIRST atom
+            # e.g., [H;X1][C;X4;H3] should only type the H (index 0), not the C
+            if len(match) > 0:
+                rd_idx = match[0]  # Only take first atom in pattern
                 orig_idx = rd_to_orig.get(rd_idx, None)
                 if orig_idx is None:
                     continue

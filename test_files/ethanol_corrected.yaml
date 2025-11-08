@@ -1,0 +1,87 @@
+# Generated Force Field Parameters (CORRECTED)
+# Created for molecule: ethanol_sample.xyz
+# Number of atoms: 9
+# UNITS: kJ/mol, nm, radians, elementary charge (e)
+# BASE SMARTS patterns (single-atom)
+# -----------------------------------------------------------------
+
+atom_types:
+- smarts: '[C;D4;H3]'
+  type_name: C_type_1
+  charge: 0.0
+  sigma: 0.35
+  epsilon: 0.276
+- smarts: '[C;D4;H2]'
+  type_name: C_type_2
+  charge: 0.0
+  sigma: 0.35
+  epsilon: 0.276
+- smarts: '[O;D2;H1]'
+  type_name: O_type_3
+  charge: 0.0
+  sigma: 0.35
+  epsilon: 0.276
+- smarts: '[#1;D1;H0]'
+  type_name: H_type_4
+  charge: 0.0
+  sigma: 0.35
+  epsilon: 0.276
+bond_types:
+  C_type_1-C_type_2:
+  - 224262.4
+  - 0.1529
+  C_type_2-O_type_3:
+  - 224262.4
+  - 0.1529
+  C_type_1-H_type_4:
+  - 224262.4
+  - 0.1529
+  C_type_2-H_type_4:
+  - 224262.4
+  - 0.1529
+  H_type_4-O_type_3:
+  - 224262.4
+  - 0.1529
+angle_types:
+  C_type_2-C_type_1-H_type_4:
+  - 418.4
+  - 1.911
+  H_type_4-C_type_1-H_type_4:
+  - 418.4
+  - 1.911
+  C_type_1-C_type_2-O_type_3:
+  - 418.4
+  - 1.911
+  C_type_1-C_type_2-H_type_4:
+  - 418.4
+  - 1.911
+  H_type_4-C_type_2-O_type_3:
+  - 418.4
+  - 1.911
+  H_type_4-C_type_2-H_type_4:
+  - 418.4
+  - 1.911
+  C_type_2-O_type_3-H_type_4:
+  - 418.4
+  - 1.911
+dihedral_types:
+  O_type_3-C_type_2-C_type_1-H_type_4:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  H_type_4-C_type_2-C_type_1-H_type_4:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  H_type_4-O_type_3-C_type_2-C_type_1:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  H_type_4-O_type_3-C_type_2-H_type_4:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
