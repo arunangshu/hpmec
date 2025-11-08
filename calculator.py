@@ -20,9 +20,6 @@ UNITS CONVENTION (strictly enforced):
 
 NOTE: XYZ input files should have coordinates in Ångströms (standard XYZ format).
       The code automatically converts to nm internally.
-
-Authors: Team Member 4 (Ankana) - Core calculations
-         Integration with GUI by Team Member 5
 """
 
 import numpy as np
