@@ -1,0 +1,73 @@
+# Generated Force Field Parameters
+# Created for molecule: nanotube_10x10_5nm.xyz
+# Number of atoms: 840
+# UNITS: kJ/mol, nm, radians, elementary charge (e)
+# -----------------------------------------------------------------
+
+atom_types:
+- smarts: '[C;D2]'
+  type_name: C_type_1
+  charge: 0.0
+  sigma: 0.35
+  epsilon: 0.276
+- smarts: '[C;D3]'
+  type_name: C_type_2
+  charge: 0.0
+  sigma: 0.35
+  epsilon: 0.276
+bond_types:
+  C_type_1-C_type_1:
+  - 224262.4
+  - 0.1529
+  C_type_1-C_type_2:
+  - 224262.4
+  - 0.1529
+  C_type_2-C_type_2:
+  - 224262.4
+  - 0.1529
+angle_types:
+  C_type_1-C_type_1-C_type_2:
+  - 418.4
+  - 1.911135530933791
+  C_type_1-C_type_2-C_type_2:
+  - 418.4
+  - 1.911135530933791
+  C_type_2-C_type_2-C_type_2:
+  - 418.4
+  - 1.911135530933791
+dihedral_types:
+  C_type_2-C_type_1-C_type_1-C_type_2:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  C_type_1-C_type_1-C_type_2-C_type_2:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  C_type_1-C_type_2-C_type_2-C_type_1:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  C_type_1-C_type_2-C_type_2-C_type_2:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  C_type_2-C_type_2-C_type_2-C_type_1:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  C_type_2-C_type_2-C_type_2-C_type_2:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
+  C_type_2-C_type_2-C_type_1-C_type_1:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 0.0
