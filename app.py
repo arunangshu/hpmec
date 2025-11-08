@@ -13,6 +13,14 @@ import pandas as pd
 import py3Dmol
 import yaml
 
+# Import real calculator functions
+from calculator import (
+    calculate_single_molecule_energy,
+    calculate_energy_with_breakdown,
+    run_parallel_calculations,
+    validate_force_field_coverage
+)
+
 # RDKit for cheminformatics and SMARTS generation
 try:
     from rdkit import Chem
@@ -254,17 +262,68 @@ with tab1:
             with open("temp.yaml", "wb") as f:
                 f.write(uploaded_yaml.getvalue())
             
+            # STEP 1: Validate force field coverage
+            with st.spinner("🔍 Validating force field parameters..."):
+                validation = validate_force_field_coverage("temp.xyz", "temp.yaml")
+            
+            # Display validation results
+            if not validation['is_complete']:
+                st.warning("⚠️ **Force Field Validation Issues Detected**")
+                
+                with st.expander("📋 Missing Parameters Details", expanded=True):
+                    if validation['missing_atom_types']:
+                        st.error(f"**Missing Atom Types ({len(validation['missing_atom_types'])})**")
+                        for at in validation['missing_atom_types']:
+                            st.write(f"  - {at}")
+                    
+                    if validation['missing_bonds']:
+                        st.error(f"**Missing Bond Parameters ({len(validation['missing_bonds'])})**")
+                        for bond in validation['missing_bonds']:
+                            st.write(f"  - {bond}")
+                    
+                    if validation['missing_angles']:
+                        st.error(f"**Missing Angle Parameters ({len(validation['missing_angles'])})**")
+                        for angle in validation['missing_angles']:
+                            st.write(f"  - {angle}")
+                    
+                    if validation['missing_dihedrals']:
+                        st.error(f"**Missing Dihedral Parameters ({len(validation['missing_dihedrals'])})**")
+                        for dihedral in validation['missing_dihedrals']:
+                            st.write(f"  - {dihedral}")
+                
+                # Show coverage statistics
+                st.subheader("📊 Coverage Statistics")
+                cov_stats = validation['coverage_stats']
+                
+                col_cov1, col_cov2, col_cov3, col_cov4 = st.columns(4)
+                with col_cov1:
+                    st.metric("Atoms", f"{cov_stats['atoms']['coverage_percent']:.1f}%", 
+                             f"{cov_stats['atoms']['typed']}/{cov_stats['atoms']['total']}")
+                with col_cov2:
+                    st.metric("Bonds", f"{cov_stats['bonds']['coverage_percent']:.1f}%",
+                             f"{cov_stats['bonds']['parameterized']}/{cov_stats['bonds']['total']}")
+                with col_cov3:
+                    st.metric("Angles", f"{cov_stats['angles']['coverage_percent']:.1f}%",
+                             f"{cov_stats['angles']['parameterized']}/{cov_stats['angles']['total']}")
+                with col_cov4:
+                    st.metric("Dihedrals", f"{cov_stats['dihedrals']['coverage_percent']:.1f}%",
+                             f"{cov_stats['dihedrals']['parameterized']}/{cov_stats['dihedrals']['total']}")
+                
+                if validation['warnings']:
+                    with st.expander("⚠️ Warnings"):
+                        for warning in validation['warnings']:
+                            st.warning(warning)
+                
+                st.info("💡 **Tip**: Use the YAML Builder tab to create missing parameters, or energy calculation will use fallback values which may be inaccurate.")
+            else:
+                st.success("✅ Force field validation passed! All parameters available.")
+            
+            # STEP 2: Proceed with energy calculation
             try:
                 if computation_mode == "Single Molecule":
-                    # Single calculation
+                    # Single calculation with detailed breakdown
                     with st.spinner("🔄 Calculating energy..."):
-                        # TODO: Replace with actual calculation function
-                        # from calculator import calculate_single_molecule_energy
-                        # result = calculate_single_molecule_energy("temp.xyz", "temp.yaml")
-                        
-                        # Placeholder simulation
-                        time.sleep(1.5)
-                        result = ("temp.xyz", -123.4567)  # Dummy result
+                        energy_breakdown = calculate_energy_with_breakdown("temp.xyz", "temp.yaml")
                     
                     st.success("✅ Calculation complete!")
                     
@@ -275,21 +334,21 @@ with tab1:
                     with col_res1:
                         st.metric(
                             label="Total Energy",
-                            value=f"{result[1]:.4f} kJ/mol",
+                            value=f"{energy_breakdown['total']:.4f} kJ/mol",
                             delta=None
                         )
                     
                     with col_res2:
                         st.metric(
                             label="Bonded Energy",
-                            value="-45.23 kJ/mol",
+                            value=f"{energy_breakdown['bonded']:.4f} kJ/mol",
                             delta=None
                         )
                     
                     with col_res3:
                         st.metric(
                             label="Non-bonded Energy",
-                            value="-78.23 kJ/mol",
+                            value=f"{energy_breakdown['nonbonded']:.4f} kJ/mol",
                             delta=None
                         )
                     
@@ -297,7 +356,14 @@ with tab1:
                     with st.expander("🔍 Detailed Energy Breakdown"):
                         breakdown_data = {
                             "Component": ["Bonds", "Angles", "Dihedrals", "Van der Waals", "Electrostatic", "Total"],
-                            "Energy (kJ/mol)": [-12.45, -18.32, -14.46, -35.67, -42.56, -123.46]
+                            "Energy (kJ/mol)": [
+                                energy_breakdown['bond'],
+                                energy_breakdown['angle'],
+                                energy_breakdown['dihedral'],
+                                energy_breakdown['vdw'],
+                                energy_breakdown['electrostatic'],
+                                energy_breakdown['total']
+                            ]
                         }
                         df = pd.DataFrame(breakdown_data)
                         st.dataframe(df, use_container_width=True)
@@ -313,17 +379,12 @@ with tab1:
                     n_cores = mp.cpu_count()
                     status_text.text(f"Using {n_cores} CPU cores...")
                     
-                    # Simulate parallel computation
+                    # Run parallel computation
                     start_time = time.time()
                     
-                    # TODO: Replace with actual parallel function
-                    # from calculator import run_parallel_calculations
-                    # results = run_parallel_calculations(["temp.xyz"] * num_copies, "temp.yaml")
-                    
-                    # Placeholder simulation
-                    for i in range(100):
-                        time.sleep(0.02)
-                        progress_bar.progress(i + 1)
+                    # Create list of xyz files (duplicates for benchmarking)
+                    xyz_files = ["temp.xyz"] * num_copies
+                    results = run_parallel_calculations(xyz_files, "temp.yaml")
                     
                     end_time = time.time()
                     elapsed_time = end_time - start_time
@@ -352,11 +413,19 @@ with tab1:
                     
                     # Show sample results
                     with st.expander("📊 Sample Results (first 10 molecules)"):
+                        sample_results = results[:10] if len(results) > 10 else results
                         sample_data = {
-                            "Molecule": [f"Molecule {i+1}" for i in range(10)],
-                            "Total Energy (kJ/mol)": [-123.46 + (i * 0.1) for i in range(10)]
+                            "Molecule": [os.path.basename(r[0]) for r in sample_results],
+                            "Total Energy (kJ/mol)": [r[1] for r in sample_results]
                         }
                         st.dataframe(pd.DataFrame(sample_data), use_container_width=True)
+            
+            except Exception as e:
+                st.error(f"❌ **Error during calculation**: {str(e)}")
+                st.error("Please check your input files and force field parameters.")
+                import traceback
+                with st.expander("🐛 Debug Information"):
+                    st.code(traceback.format_exc())
             
             finally:
                 # Cleanup temp files
