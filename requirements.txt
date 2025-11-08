@@ -12,9 +12,8 @@ scipy
 # 3D Molecule Visualization
 py3Dmol
 
-# Cheminformatics (for future integration with other modules)
-# rdkit  # Uncomment when integrating with Module 2
-# xyz2mol  # Uncomment when integrating with Module 2
+# Cheminformatics (for topology inference and SMARTS generation)
+rdkit
 
 # Force field parsing
 pyyaml
